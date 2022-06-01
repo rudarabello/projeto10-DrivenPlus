@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import axios from "axios";
@@ -8,39 +8,50 @@ import logo from "../assets/Driven_white 1.png";
 
 export default function Login() {
 
-    const [email, setEmail] = useState();
-    const [password, setPassword] = useState();
-    const { setIdPlano, setToken, setName } = useContext(LoginContext);
-
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const localUser = localStorage.getItem("user");
     const navigate = useNavigate()
+    const { setAccount } = useContext(LoginContext);
+    const URL = "https://mock-api.driven.com.br/api/v4/driven-plus/auth/login";
+    const tempAxiosFunction = useRef();
+    const axiosFunction = () => {
+        if (localUser !== null) {
+            const localUserParse = JSON.parse(localUser);
+            setEmail(localUserParse.email);
+            setPassword(localUserParse.password);
+        }
+    }
+
+    tempAxiosFunction.current = axiosFunction;
+
+    useEffect(() => {
+        tempAxiosFunction.current();
+    }, []);
+
 
     function handleLogin(e) {
-
         e.preventDefault();
-
-        const promise = axios.post('https://mock-api.driven.com.br/api/v4/driven-plus/auth/login', {
-            email: email,
-            password: password
-        });
-
-        promise.then(response => {
-            setToken(response.data.token);
-            setName(response.data.name);
-
-            if (response.data.membership === null) {
-                navigate('/subscriptions')
-            } else if (response.data.membership !== null) {
-                setIdPlano(response.data.membership.id)
-                navigate('/home')
-            }
-
-
-
-        });
-
+        const user = {
+            email,
+            password
+        }
+        const promise = axios.post(URL, user);
+        promise.then(response => GoTo(response.data));
         promise.catch(error => alert(error.response.data.message));
-
     }
+
+    function GoTo(data) {
+        setAccount(data); const user = { email, password };
+        localStorage.removeItem("user");
+        const userStrigify = JSON.stringify(user);
+        localStorage.setItem("user", userStrigify);
+        if (data.membership === null) {
+            navigate('/Subscriptions')
+        } else {
+            navigate('/Home')
+        }
+    };
 
     return (
         <StyledLogin>
