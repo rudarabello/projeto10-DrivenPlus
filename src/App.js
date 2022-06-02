@@ -1,40 +1,26 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { useState } from "react";
 import LoginContext from "./contexts/LoginContext";
 import Login from "./components/Login"
 import SignUp from "./components/SignUp";
 import Subscriptions from "./components/Subscriptions";
-import SubscriptionsId from "./components/SubscriptionsId";
+import Plan from "./components/Plan";
 import Home from "./components/Home";
+import { useState } from "react";
 
 export default function App() {
-
-    const [account, setAccount] = useState({
-        id: "",
-        name: "",
-        cpf: "",
-        email: "",
-        password: "",
-        membership: "",
-        token: ""
-    });
-    const [price, setPrice] = useState("");
-	const [image, setImage] = useState("");
-	const [id, setId] = useState("");
-    
-    
-
+    const [account, setAccount] = useState([{}]);
+    const [plan, setPlan] = useState([]);
     return (
-        <LoginContext.Provider value={{ account, setAccount }}>
-            <BrowserRouter>
-                <Routes>
-                    <Route path="/" element={<Login />} />
-                    <Route path="/signup" element={<SignUp />} />
-                    <Route path="/subscriptions" element={<Subscriptions setPrice={price} setImage={image} setId={id}/>}/>
-                    <Route path="/subscriptions/:id" element={<SubscriptionsId price={price} image={image} id={id}/>}/>
-                    <Route path="/home" element={<Home  />} />
-                </Routes>
-            </BrowserRouter>
+        <LoginContext.Provider value={{account, setAccount, plan, setPlan}}>
+                <BrowserRouter>
+                    <Routes>
+                        <Route path="/" element={<Login />} />
+                        <Route path="/signup" element={<SignUp />} />
+                        <Route path="/subscriptions" element={<Subscriptions />} />
+                        <Route path="/plan/:idPlan" element={<Plan />} />
+                        <Route path="/home" element={<Home />} />
+                    </Routes>
+                </BrowserRouter>
         </LoginContext.Provider>
     )
 }
