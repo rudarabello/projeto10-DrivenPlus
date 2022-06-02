@@ -44,12 +44,13 @@ export default function Login() {
     function GoTo(data) {
         setAccount(data); const user = { email, password };
         localStorage.removeItem("user");
+        console.log(user);
         const userStrigify = JSON.stringify(user);
         localStorage.setItem("user", userStrigify);
         if (data.membership === null) {
-            navigate('/Subscriptions')
+            navigate('/subscriptions')
         } else {
-            navigate('/Home')
+            navigate('/home')
         }
     };
 
