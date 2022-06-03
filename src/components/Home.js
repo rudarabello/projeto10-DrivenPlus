@@ -1,76 +1,86 @@
 
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { useContext} from 'react';
+import { useContext } from 'react';
 import styled from "styled-components";
 import LoginContext from "../contexts/LoginContext";
 import Profile from "../assets/Profile.png";
 
 export default function Home() {
-    const navigate = useNavigate();
-    const { account } = useContext(LoginContext);
-    const { plan } = useContext(LoginContext);
 
-    function deletePlanDataFromApi() {
-        const config = {
-            headers: {
-                Authorization: `Bearer ${account.token}`,
-            },
-        };
-        const decision = window.confirm(
-            "Tem certeza que deseja cancelar o seu Plano ?"
-        );
+  const navigate = useNavigate();
+  const { account } = useContext(LoginContext);
+  const { plan } = useContext(LoginContext);
 
-        if (decision) {
-            const promise = axios.delete(
-                "https://mock-api.driven.com.br/api/v4/driven-plus/subscriptions",
-                config
-            );
 
-            promise.then(() => {
-                alert(
-                    "Seu plano foi cancelado com sucesso, contrate outro agora mesmo!"
-                );
-                navigate("/subscriptions");
-            });
-            promise.catch((error) => {
-                alert(
-                    "Tive um problema tecnico ao cancelar o seu Plano, por favor tente mais tarde ",
-                    error
-                );
-            });
-        } 
-    }
+  console.log(account)
+  console.log(plan.membership)
+  console.log(account.token)
 
-    return (
-        <ContainerHome>
-            <Header>
-                <img src={account.membership.image} alt="Imagem do Perfil" />
-                <img
-                    onClick={() => navigate(`/users/${account.id}`)}
-                    src={Profile}
-                    alt="Imagem do Perfil"
-                    width="20px"
-                />
-            </Header>
-            <h1>Olá, {account.name}</h1>
 
-            <ButtonsFromApi>
-                {plan.membership.perks === undefined
-                    ? console.log("Eu sou o array undefined")
-                    : plan.membership.perks.map((perks, index) => (
-                        <a key={index} href={perks.link} target="_blank">
-                            <button key={index}>{perks.title}</button>
-                        </a>
-                    ))}
-            </ButtonsFromApi>
 
-            <ButtonsHomeContainer>
-                <button onClick={() => navigate("/subscriptions")}>Mudar Plano</button>
-                <button onClick={() => deletePlanDataFromApi()}>Cancelar Plano</button>
-            </ButtonsHomeContainer>
-        </ContainerHome>
+
+  function deletePlanDataFromApi() {
+    const config = {
+      headers: {
+        Authorization: `Bearer ${account.token}`,
+      },
+    };
+    const decision = window.confirm(
+      "Tem certeza que deseja cancelar o seu Plano ?"
     );
+
+    if (decision) {
+      const promise = axios.delete(
+        "https://mock-api.driven.com.br/api/v4/driven-plus/subscriptions",
+        config
+      );
+
+      promise.then(() => {
+        alert(
+          "Seu plano foi cancelado com sucesso, contrate outro agora mesmo!"
+        );
+        navigate("/subscriptions");
+      });
+      promise.catch((error) => {
+        alert(
+          "Tive um problema tecnico ao cancelar o seu Plano, por favor tente mais tarde ",
+          error
+        );
+      });
+    }
+  }
+
+  return (
+    <ContainerHome>
+      <Header>
+        <img src={account.membership.image} alt="Imagem do Perfil" />
+        <img
+          onClick={() => navigate(`/users/${account.id}`)}
+          src={Profile}
+          alt="Imagem do Perfil"
+          width="20px"
+          height="20px"
+        />
+      </Header>
+      <h1>Olá, {account.name}</h1>
+
+      <ButtonsFromApi>
+        {account.membership.perks === undefined
+          ? console.log("Eu sou o array undefined")
+          : account.membership.perks.map((perks, index) => (
+            <a key={index} href={perks.link} target="_blank" rel="noreferrer">
+              <button key={index}>{perks.title}</button>
+            </a>
+          ))}
+      </ButtonsFromApi>
+
+      <ButtonsHomeContainer>
+        <button onClick={() => navigate("/subscriptions")}>Mudar Plano</button>
+        <button onClick={() => deletePlanDataFromApi()}>Cancelar Plano</button>
+      </ButtonsHomeContainer>
+    </ContainerHome>
+  );
 }
 const ButtonsFromApi = styled.div`
   width: 100%;
@@ -100,8 +110,11 @@ const ButtonsHomeContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
+  justify-items: center;
+  align-content: center;
   position: relative;
-  button {
+    button {
     width: 22rem;
     height: 50px;
     margin-bottom: 10px;
@@ -146,6 +159,8 @@ const Header = styled.div`
 
 const ContainerHome = styled.div`
   display: flex;
+  background: black;
+  height: 100%;
   flex-direction: column;
   padding: 3rem;
   h1 {
@@ -155,4 +170,8 @@ const ContainerHome = styled.div`
     font-family: "Roboto";
     font-size: 28px;
   }
+  @media(max-width: 450px) {
+    height: 100vh;
+  }
+
 `;

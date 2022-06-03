@@ -35,6 +35,7 @@ export default function Plan() {
 
   console.log(idPlan)
   console.log(account.token)
+  console.log(setPlan)
 
   useEffect(() => {
 
@@ -43,7 +44,7 @@ export default function Plan() {
         Authorization: `Bearer ${account.token}`,
       },
     };
-    const promise = axios.get(ApiGet,config);
+    const promise = axios.get(ApiGet, config);
 
     promise.then((response) => {
       setDataPlan(response.data)
@@ -51,7 +52,7 @@ export default function Plan() {
     promise.catch((error) =>
       console.log(error)
     );
-  }, [account.token]);
+  }, []);
 
   function SendPlanAssinerToApi() {
     if (
@@ -73,11 +74,7 @@ export default function Plan() {
         },
       };
       const promise = axios.post(ApiPost, userPayment, config);
-      promise.then((response) => {
-        setPlan(response.data);
-        alert("Parabéns, pagamento feito com sucesso!");
-        navigate("/home");
-      });
+      promise.then(response => GoTo(response.data));
       promise.catch((error) => {
         alert(
           "Ocorreu um erro durante o seu pagamento, tente novamente mais tarde ",
@@ -87,12 +84,23 @@ export default function Plan() {
     } else {
       alert("Por favor preencha os dados corretamente.");
     }
+
+    function GoTo(data) {
+      setPlan(data);
+      console.log(setPlan)
+      alert("Parabéns, pagamento feito com sucesso!");
+      navigate("/home");
+    };
+
+
+
+
+
   }
 
 
   return (
     <Container>
-      
       <ContainerPlan>
         <BackArrow onClick={() => navigate('/subscriptions')}>
           <ArrowBackOutline color={'#ffffff'} height="40px" width="40px" />
@@ -119,7 +127,7 @@ export default function Plan() {
           {dataPlan.perks !== undefined ? dataPlan.price.replace(".", ",") : ""}{" "}
           cobrados mensalmente
         </h3>
-        
+
         <InputsMaiores>
           <input
             onChange={(e) => setCardName(e.target.value)}
@@ -150,8 +158,8 @@ export default function Plan() {
       {assiner ? (
         <AssinarDiv>
           <a>
-          <CloseOutline onClick={() => setAssiner(false)}
-          right="10px" color={'#ffffff'} height="40px" width="40px" />
+            <CloseOutline onClick={() => setAssiner(false)}
+              right="10px" color={'#ffffff'} height="40px" width="40px" />
           </a>
           <div>
             <h3>
