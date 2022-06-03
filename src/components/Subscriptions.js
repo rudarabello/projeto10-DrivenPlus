@@ -19,10 +19,8 @@ export default function Subscriptions() {
         promise.then(response => {
             setPlanos(response.data)
         }, [account.token]);
-        console.log(account.token);
         promise.catch((error) => alert(error.response.data.message));
     }, [account.token]);
-
     return (
         <StyledSubscriptions>
             <h1>Escolha o seu plano</h1>
@@ -67,7 +65,7 @@ const PlanList = styled.div`
         justify-content: center;
         align-items: center;
         gap: 10px;
-	    width: 80%;
+        width: 80%;
         max-width: 350px;
         height: 180px;
         display: flex;
@@ -84,7 +82,6 @@ const PlanList = styled.div`
         align-items: center;
         text-decoration: none;
         
-
     }
     p {
         font-family: "Roboto";

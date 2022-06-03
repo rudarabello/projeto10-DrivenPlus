@@ -14,7 +14,7 @@ export default function Login() {
     const localUser = localStorage.getItem("user");
     const navigate = useNavigate()
     const { setAccount } = useContext(Context);
-    const { infoPlan, setInfoPlan } = useContext(ContextPlan);
+    const { setInfoPlan } = useContext(ContextPlan);
     const URL = "https://mock-api.driven.com.br/api/v4/driven-plus/auth/login";
     const tempAxiosFunction = useRef();
     const axiosFunction = () => {
@@ -24,14 +24,10 @@ export default function Login() {
             setPassword(localUserParse.password);
         }
     }
-
     tempAxiosFunction.current = axiosFunction;
-
     useEffect(() => {
         tempAxiosFunction.current();
     }, []);
-
-
     function handleLogin(e) {
         e.preventDefault();
         const user = {
@@ -42,16 +38,11 @@ export default function Login() {
         promise.then(response => GoTo(response.data));
         promise.catch(error => alert(error.response.data.message));
     }
-
     function GoTo(data) {
         setAccount(data);
         setInfoPlan(data.membership);
         const user = { email, password };
-        localStorage.removeItem("user");
-        console.log(user);
-        console.log(data);
-        console.log(infoPlan);
-        
+        localStorage.removeItem("user");        
         const userStrigify = JSON.stringify(user);
         localStorage.setItem("user", userStrigify);
         if (data.membership === null) {
@@ -60,7 +51,6 @@ export default function Login() {
             navigate('/home')
         }
     };
-
     return (
         <StyledLogin>
             <Page>

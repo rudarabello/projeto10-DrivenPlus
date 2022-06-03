@@ -8,19 +8,9 @@ import ContextPlan from "../contexts/ContextPlan";
 import Profile from "../assets/Profile.png";
 
 export default function Home() {
-
   const navigate = useNavigate();
   const { account } = useContext(Context);
   const { infoPlan } = useContext(ContextPlan);
-
-
-  console.log(account)
-  console.log(infoPlan)
-  console.log(account.token)
-
-
-
-
   function deletePlanDataFromApi() {
     const config = {
       headers: {
@@ -30,13 +20,11 @@ export default function Home() {
     const decision = window.confirm(
       "Tem certeza que deseja cancelar o seu Plano ?"
     );
-
     if (decision) {
       const promise = axios.delete(
         "https://mock-api.driven.com.br/api/v4/driven-plus/subscriptions",
         config
       );
-
       promise.then(() => {
         alert(
           "Seu plano foi cancelado com sucesso, contrate outro agora mesmo!"
@@ -51,12 +39,11 @@ export default function Home() {
       });
     }
   }
-
   return (
     <ContainerHome>
       <Container>
       <Header>
-        <img src={infoPlan.image} alt="Imagem do Perfil" />
+        <img src={infoPlan.image} alt="Imagem do Plano" />
         <img
           onClick={() => navigate(`/users/${infoPlan.id}`)}
           src={Profile}
@@ -66,17 +53,14 @@ export default function Home() {
         />
       </Header>
       <h1>Olá, {account.name}</h1>
-
       <ButtonsFromApi>
         {infoPlan.perks === undefined
-          ? console.log("Eu sou o array undefined")
-          : infoPlan.perks.map((perks, index) => (
+          ? "": infoPlan.perks.map((perks, index) => (
             <a key={index} href={perks.link} target="_blank" rel="noreferrer">
               <button key={index}>{perks.title}</button>
             </a>
           ))}
       </ButtonsFromApi>
-
       <ButtonsHomeContainer>
         <button onClick={() => navigate("/subscriptions")}>Mudar Plano</button>
         <button onClick={() => deletePlanDataFromApi()}>Cancelar Plano</button>

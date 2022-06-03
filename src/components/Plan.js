@@ -16,15 +16,11 @@ import { CloseOutline } from 'react-ionicons'
 
 
 export default function Plan() {
-
   const { idPlan } = useParams();
   const { account } = useContext(Context);
   const { infoPlan, setInfoPlan } = useContext(ContextPlan);
-
   const ApiGet = `https://mock-api.driven.com.br/api/v4/driven-plus/subscriptions/memberships/${idPlan}`;
   const ApiPost = 'https://mock-api.driven.com.br/api/v4/driven-plus/subscriptions';
-
-
   const tempAxiosFunction = useRef();
   const axiosFunction = () => {
     const config = { headers: { Authorization: `Bearer ${account.token}`, }, };
@@ -32,24 +28,17 @@ export default function Plan() {
     promise.then(response => GoTo(response.data));
     promise.catch(error => console.log(error));
   }
-
-
   tempAxiosFunction.current = axiosFunction;
   useEffect(() => {
     tempAxiosFunction.current();
   }, []);
-
   function GoTo(data) {
     setDataPlan(data);
     setInfoPlan(data);
     localStorage.removeItem("plan");
-    console.log(infoPlan);
     const userStrigify = JSON.stringify(infoPlan);
     localStorage.setItem("plan", userStrigify);
   };
-
-
-
 const [cardName, setCardName] = useState("");
 const [cardNumber, setCardNumber] = useState("");
 const [securityNumber, setSecurityNumber] = useState("");
@@ -57,11 +46,6 @@ const [expirationDate, setExpirationDate] = useState("");
 const [dataPlan, setDataPlan] = useState({});
 const [assiner, setAssiner] = useState(false);
 const navigate = useNavigate();
-
-
-console.log(idPlan)
-console.log(account.token)
-console.log(infoPlan)
 
 function SendPlanAssinerToApi() {
   if (
