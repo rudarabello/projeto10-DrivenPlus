@@ -45,7 +45,7 @@ export default function Home() {
       <Header>
         <img src={infoPlan.image} alt="Imagem do Plano" />
         <img
-          onClick={() => navigate(`/users/${infoPlan.id}`)}
+          onClick={() => navigate(`/user/${infoPlan.id}`)}
           src={Profile}
           alt="Imagem do Perfil"
           width="20px"

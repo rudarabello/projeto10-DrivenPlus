@@ -6,6 +6,7 @@ import SignUp from "./components/SignUp";
 import Subscriptions from "./components/Subscriptions";
 import Plan from "./components/Plan";
 import Home from "./components/Home";
+import UserPage from "./components/UserPage";
 import { useState } from "react";
 
 export default function App() {
@@ -21,6 +22,7 @@ export default function App() {
                         <Route path="/subscriptions" element={<Subscriptions />} />
                         <Route path="/plan/:idPlan" element={<Plan />} />
                         <Route path="/home" element={<Home />} />
+                        <Route path="/user/:idUser" element={<UserPage />} />
                     </Routes>
                 </BrowserRouter>
             </ContextPlan.Provider>
