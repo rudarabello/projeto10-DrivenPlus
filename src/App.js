@@ -7,6 +7,7 @@ import Subscriptions from "./components/Subscriptions";
 import Plan from "./components/Plan";
 import Home from "./components/Home";
 import UserPage from "./components/UserPage";
+import UserUpdate from "./components/UserUpdate";
 import { useState } from "react";
 
 export default function App() {
@@ -23,6 +24,7 @@ export default function App() {
                         <Route path="/plan/:idPlan" element={<Plan />} />
                         <Route path="/home" element={<Home />} />
                         <Route path="/user/:idUser" element={<UserPage />} />
+                        <Route path="/user/:idUser/update" element={<UserUpdate />} />
                     </Routes>
                 </BrowserRouter>
             </ContextPlan.Provider>

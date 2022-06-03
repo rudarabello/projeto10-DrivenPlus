@@ -1,10 +1,10 @@
-# Deployed on Vercel
+### Deployed on Vercel
 
-Here you can check the current version of this project [Vercel] ().
+Here you can check the current version of this project Vercel (https://projeto10-driven-plus.vercel.app/).
 
-## A project using Mock-API
+### A project using Mock-API
 
-Get, Post, Delete, Authorization and Put was implemented [Mock-io] (https://mockapi.io/).
+Get, Post, Delete, Authorization and Put was implemented with Mock-io (https://mockapi.io/).
 
 ### Getting Started with Create React App
 
