@@ -20,10 +20,10 @@ export default function Plan() {
 
   const [dataPlan, setDataPlan] = useState({});
   const [assiner, setAssiner] = useState(false);
-  const {idPlan} = useParams();
- 
-  
-  const ApiPost = "https://mock-api.driven.com.br/api/v4/driven-plus/subscriptions";
+  const { idPlan } = useParams();
+
+  const ApiPost = 'https://mock-api.driven.com.br/api/v4/driven-plus/subscriptions';
+  const ApiGet = `https://mock-api.driven.com.br/api/v4/driven-plus/subscriptions/memberships/${idPlan}`;
 
   const { account } = useContext(LoginContext);
   const { setPlan } = useContext(LoginContext);
@@ -37,15 +37,13 @@ export default function Plan() {
   console.log(account.token)
 
   useEffect(() => {
-    
+
     const config = {
       headers: {
         Authorization: `Bearer ${account.token}`,
       },
     };
-    const promise = axios.get(
-      `https://mock-api.driven.com.br/api/v4/driven-plus/subscriptions/memberships/${idPlan}`,
-      config);
+    const promise = axios.get(ApiGet,config);
 
     promise.then((response) => {
       setDataPlan(response.data)
@@ -86,67 +84,75 @@ export default function Plan() {
           error
         );
       });
-    } else alert("Por favor preencha os dados corretamente.");
+    } else {
+      alert("Por favor preencha os dados corretamente.");
+    }
   }
 
 
   return (
-    <ContainerPlan>
-      <BackArrow onClick={() => navigate('/subscriptions')}>
-        <ArrowBackOutline color={'#ffffff'} height="40px" width="40px" />
-      </BackArrow>
-      <img src={dataPlan.image} alt="Logo do Plano selecionado" />
-      <h2>{dataPlan.name}</h2>
-      <Benefits>
-        <ClipboardOutline color={'#FF4791'} height="26px" width="22px" />
-        <h3>Benefícios:</h3>
-      </Benefits>
-      {dataPlan.perks !== undefined
-        ? dataPlan.perks.map((perks, index) => (
-          <h3 key={index}>
-            {index + 1}. {perks.title}{" "}
-          </h3>
-        ))
-        : ""}
-      <Cash>
-        <CashOutline color={'#FF4791'} height="26px" width="22px" />
-        <h3>Preço:</h3> <p></p>
-      </Cash>
-      <h3>
-        R${" "}
-        {dataPlan.perks !== undefined ? dataPlan.price.replace(".", ",") : ""}{" "}
-        cobrados mensalmente
-      </h3>
-      <InputsMaiores>
-        <input
-          onChange={(e) => setCardName(e.target.value)}
-          type="text"
-          placeholder="Nome impresso no cartão"
-        />
-        <input
-          onChange={(e) => setCardNumber(e.target.value)}
-          type="number"
-          placeholder="Digitos do cartão"
-        />
-      </InputsMaiores>
-      <InputsMenores>
-        <input
-          onChange={(e) => setSecurityNumber(e.target.value)}
-          type="number"
-          placeholder="Código de segurança"
-        />
-        <input
-          onChange={(e) => setExpirationDate(e.target.value)}
-          type="date"
-          placeholder="Válidade"
-        />
-      </InputsMenores>
-      <button onClick={() => setAssiner(true)}>ASSINAR</button>
+    <Container>
+      
+      <ContainerPlan>
+        <BackArrow onClick={() => navigate('/subscriptions')}>
+          <ArrowBackOutline color={'#ffffff'} height="40px" width="40px" />
+        </BackArrow>
+        <img src={dataPlan.image} alt="Logo do Plano selecionado" />
+        <h2>{dataPlan.name}</h2>
+        <Benefits>
+          <ClipboardOutline color={'#FF4791'} height="26px" width="22px" />
+          <h3>Benefícios:</h3>
+        </Benefits>
+        {dataPlan.perks !== undefined
+          ? dataPlan.perks.map((perks, index) => (
+            <h3 key={index}>
+              {index + 1}. {perks.title}{" "}
+            </h3>
+          ))
+          : ""}
+        <Cash>
+          <CashOutline color={'#FF4791'} height="26px" width="22px" />
+          <h3>Preço:</h3> <p></p>
+        </Cash>
+        <h3>
+          R${" "}
+          {dataPlan.perks !== undefined ? dataPlan.price.replace(".", ",") : ""}{" "}
+          cobrados mensalmente
+        </h3>
+        
+        <InputsMaiores>
+          <input
+            onChange={(e) => setCardName(e.target.value)}
+            type="text"
+            placeholder="Nome impresso no cartão"
+          />
+          <input
+            onChange={(e) => setCardNumber(e.target.value)}
+            type="number"
+            placeholder="Digitos do cartão"
+          />
+        </InputsMaiores>
+        <InputsMenores>
+          <input
+            onChange={(e) => setSecurityNumber(e.target.value)}
+            type="number"
+            placeholder="CVV"
+          />
+          <input
+            onChange={(e) => setExpirationDate(e.target.value)}
+            type="date"
+            placeholder="Válidade"
+          />
+        </InputsMenores>
+        <button onClick={() => setAssiner(true)}>ASSINAR</button>
 
+      </ContainerPlan>
       {assiner ? (
         <AssinarDiv>
+          <a>
           <CloseOutline onClick={() => setAssiner(false)}
-            color={'#000000'} height='25px' width='25px' />
+          right="10px" color={'#ffffff'} height="40px" width="40px" />
+          </a>
           <div>
             <h3>
               Tem certeza que deseja assinar o pacote {dataPlan.name} ? (R${" "}
@@ -164,13 +170,93 @@ export default function Plan() {
       ) : (
         ""
       )}
-    </ContainerPlan>
+    </Container>
   );
 }
+
+
+
+const AssinarDiv = styled.div`
+
+  position: fixed;
+  width: 100%;
+  height: 200vh;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  align-content: center;
+  a{
+    right: 10px;
+    top: 10px;
+    position: fixed;
+  }
+  div {
+    width: 60% !important;
+    max-width: 350px ;
+    height: 200px;
+    padding: 2rem;
+    border-radius: 5px;
+    box-shadow: 0px 0px 10px rgba(999, 999, 999, 0.7);
+    background-color: white;
+    display: flex;
+    flex-direction: column !important;
+    justify-content: center !important;
+    align-items: center !important;
+    h3 {
+      color: #000000 !important;
+      font-family: "Roboto";
+      font-weight: 500;
+      font-size: 18px;
+    }
+    p {
+      width: 100%;
+      display: flex;
+      margin-top: 20px;
+      justify-content: space-around;
+      button {
+        width: 100px;
+        :first-child {
+          background-color: #cecece;
+          border: thin solid #cecece;
+        }
+        :hover {
+          cursor: pointer;
+          box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+        }
+      }
+    }
+  }
+`;
+const Container = styled.div`
+  background: black;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  button {
+        height: 55px;
+        background-color: #ff4791;
+        border: thin solid #ff4791;
+        border-radius: 5px;
+        color: #ffffff;
+        font-family: "Roboto";
+        font-weight: 500;
+        font-size: 18px;
+        :hover {
+          box-shadow: 0px 0px 10px rgba(999, 999, 999, 0.7);
+          cursor: pointer;
+        }
+      }
+
+`
+
 
 const ContainerPlan = styled.div`
   background: black;
   height: 100vh;
+  max-width: 414px ;
   padding: 3.5rem;
   display: flex;
   flex-direction: column;
@@ -198,20 +284,7 @@ const ContainerPlan = styled.div`
     font-weight: 300;
     font-size: 18px;
   }
-        button {
-        height: 55px;
-        background-color: #ff4791;
-        border: thin solid #ff4791;
-        border-radius: 5px;
-        color: #ffffff;
-        font-family: "Roboto";
-        font-weight: 500;
-        font-size: 18px;
-        :hover {
-          box-shadow: 0px 0px 10px rgba(999, 999, 999, 0.7);
-          cursor: pointer;
-        }
-      }
+  
     `;
 
 
@@ -265,61 +338,4 @@ const BackArrow = styled.div`
       }
     `;
 
-
-
-const AssinarDiv = styled.div`
-      position: fixed;
-      width: 100%;
-      height: 200vh;
-      margin-top: -100px !important;
-      background-color: rgba(0, 0, 0, 0.6);
-      display: flex;
-      justify-content: center;
-      img {
-        width: 40px !important;
-        height: 40px !important;
-        position: fixed;
-        top: 42px;
-        right: 38px;
-        :hover {
-          cursor: pointer;
-        }
-      }
-      div {
-        width: 400px !important;
-        margin-left: -4rem !important;
-        padding: 2rem;
-        height: 200px;
-        border-radius: 5px;
-        box-shadow: 0px 0px 10px rgba(999, 999, 999, 0.7);
-        background-color: white;
-        display: flex;
-        flex-direction: column !important;
-        justify-content: center !important;
-        align-items: center !important;
-        h3 {
-          color: #000000 !important;
-          font-family: "Roboto";
-          font-weight: 500;
-          font-size: 18px;
-        }
-        p {
-          width: 100%;
-          display: flex;
-          margin-top: 20px;
-          justify-content: space-around;
-          button {
-            width: 100px;
-            :first-child {
-              background-color: #cecece;
-              border: thin solid #cecece;
-            }
-            :hover {
-              cursor: pointer;
-              box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
-            }
-          }
-        }
-      }
-    `;
 
