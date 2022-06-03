@@ -62,7 +62,7 @@ export default function UserUpdate() {
     return (
         <Container>
             <ContainerUsers>
-                <BackArrow onClick={() => navigate(`/users/${account.id}`)}>
+                <BackArrow onClick={() => navigate(`/user/${account.id}`)}>
                     <ArrowBackOutline color={'#ffffff'} height="40px" width="40px" />
                 </BackArrow>
                 <ButtonsFromApi>
