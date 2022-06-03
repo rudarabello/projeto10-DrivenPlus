@@ -1,8 +1,9 @@
 import axios from 'axios';
-import { useContext, useState, useEffect } from 'react';
+import { useContext, useState, useEffect, useRef } from 'react';
 import { useNavigate, useParams } from "react-router-dom";
 
-import LoginContext from "../contexts/LoginContext";
+import Context from "../contexts/Context";
+import ContextPlan from "../contexts/ContextPlan";
 
 import styled from "styled-components";
 import { ClipboardOutline } from 'react-ionicons'
@@ -16,170 +17,166 @@ import { CloseOutline } from 'react-ionicons'
 
 export default function Plan() {
 
-  const navigate = useNavigate();
-
-  const [dataPlan, setDataPlan] = useState({});
-  const [assiner, setAssiner] = useState(false);
   const { idPlan } = useParams();
+  const { account } = useContext(Context);
+  const { infoPlan, setInfoPlan } = useContext(ContextPlan);
 
-  const ApiPost = 'https://mock-api.driven.com.br/api/v4/driven-plus/subscriptions';
   const ApiGet = `https://mock-api.driven.com.br/api/v4/driven-plus/subscriptions/memberships/${idPlan}`;
+  const ApiPost = 'https://mock-api.driven.com.br/api/v4/driven-plus/subscriptions';
 
-  const { account } = useContext(LoginContext);
-  const { setPlan } = useContext(LoginContext);
 
-  const [cardName, setCardName] = useState("");
-  const [cardNumber, setCardNumber] = useState("");
-  const [securityNumber, setSecurityNumber] = useState("");
-  const [expirationDate, setExpirationDate] = useState("");
+  const tempAxiosFunction = useRef();
+  const axiosFunction = () => {
+    const config = { headers: { Authorization: `Bearer ${account.token}`, }, };
+    const promise = axios.get(ApiGet, config);
+    promise.then(response => GoTo(response.data));
+    promise.catch(error => console.log(error));
+  }
 
-  console.log(idPlan)
-  console.log(account.token)
-  console.log(setPlan)
 
+  tempAxiosFunction.current = axiosFunction;
   useEffect(() => {
+    tempAxiosFunction.current();
+  }, []);
 
+  function GoTo(data) {
+    setDataPlan(data);
+    setInfoPlan(data);
+    localStorage.removeItem("plan");
+    console.log(infoPlan);
+    const userStrigify = JSON.stringify(infoPlan);
+    localStorage.setItem("plan", userStrigify);
+  };
+
+
+
+const [cardName, setCardName] = useState("");
+const [cardNumber, setCardNumber] = useState("");
+const [securityNumber, setSecurityNumber] = useState("");
+const [expirationDate, setExpirationDate] = useState("");
+const [dataPlan, setDataPlan] = useState({});
+const [assiner, setAssiner] = useState(false);
+const navigate = useNavigate();
+
+
+console.log(idPlan)
+console.log(account.token)
+console.log(infoPlan)
+
+function SendPlanAssinerToApi() {
+  if (
+    cardNumber !== "" &&
+    expirationDate !== "" &&
+    cardName !== "" &&
+    securityNumber !== ""
+  ) {
+    const userPayment = {
+      membershipId: dataPlan.id,
+      cardName: cardName,
+      cardNumber: cardNumber,
+      securityNumber: securityNumber,
+      expirationDate: expirationDate,
+    };
     const config = {
       headers: {
         Authorization: `Bearer ${account.token}`,
       },
     };
-    const promise = axios.get(ApiGet, config);
-
-    promise.then((response) => {
-      setDataPlan(response.data)
+    const promise = axios.post(ApiPost, userPayment, config);
+    promise.then(() => GoTo());
+    promise.catch((error) => {
+      alert(
+        "Ocorreu um erro durante o seu pagamento, tente novamente mais tarde ",
+        error
+      );
     });
-    promise.catch((error) =>
-      console.log(error)
-    );
-  }, []);
-
-  function SendPlanAssinerToApi() {
-    if (
-      cardNumber !== "" &&
-      expirationDate !== "" &&
-      cardName !== "" &&
-      securityNumber !== ""
-    ) {
-      const userPayment = {
-        membershipId: dataPlan.id,
-        cardName: cardName,
-        cardNumber: cardNumber,
-        securityNumber: securityNumber,
-        expirationDate: expirationDate,
-      };
-      const config = {
-        headers: {
-          Authorization: `Bearer ${account.token}`,
-        },
-      };
-      const promise = axios.post(ApiPost, userPayment, config);
-      promise.then(response => GoTo(response.data));
-      promise.catch((error) => {
-        alert(
-          "Ocorreu um erro durante o seu pagamento, tente novamente mais tarde ",
-          error
-        );
-      });
-    } else {
-      alert("Por favor preencha os dados corretamente.");
-    }
-
-    function GoTo(data) {
-      setPlan(data);
-      console.log(setPlan)
-      alert("Parabéns, pagamento feito com sucesso!");
-      navigate("/home");
-    };
-
-
-
-
-
+  } else {
+    alert("Por favor preencha os dados corretamente.");
   }
-
-
-  return (
-    <Container>
-      <ContainerPlan>
-        <BackArrow onClick={() => navigate('/subscriptions')}>
-          <ArrowBackOutline color={'#ffffff'} height="40px" width="40px" />
-        </BackArrow>
-        <img src={dataPlan.image} alt="Logo do Plano selecionado" />
-        <h2>{dataPlan.name}</h2>
-        <Benefits>
-          <ClipboardOutline color={'#FF4791'} height="26px" width="22px" />
-          <h3>Benefícios:</h3>
-        </Benefits>
-        {dataPlan.perks !== undefined
-          ? dataPlan.perks.map((perks, index) => (
-            <h3 key={index}>
-              {index + 1}. {perks.title}{" "}
-            </h3>
-          ))
-          : ""}
-        <Cash>
-          <CashOutline color={'#FF4791'} height="26px" width="22px" />
-          <h3>Preço:</h3> <p></p>
-        </Cash>
-        <h3>
-          R${" "}
-          {dataPlan.perks !== undefined ? dataPlan.price.replace(".", ",") : ""}{" "}
-          cobrados mensalmente
-        </h3>
-
-        <InputsMaiores>
-          <input
-            onChange={(e) => setCardName(e.target.value)}
-            type="text"
-            placeholder="Nome impresso no cartão"
-          />
-          <input
-            onChange={(e) => setCardNumber(e.target.value)}
-            type="number"
-            placeholder="Digitos do cartão"
-          />
-        </InputsMaiores>
-        <InputsMenores>
-          <input
-            onChange={(e) => setSecurityNumber(e.target.value)}
-            type="number"
-            placeholder="CVV"
-          />
-          <input
-            onChange={(e) => setExpirationDate(e.target.value)}
-            type="date"
-            placeholder="Válidade"
-          />
-        </InputsMenores>
-        <button onClick={() => setAssiner(true)}>ASSINAR</button>
-
-      </ContainerPlan>
-      {assiner ? (
-        <AssinarDiv>
-          <a>
-            <CloseOutline onClick={() => setAssiner(false)}
-              right="10px" color={'#ffffff'} height="40px" width="40px" />
-          </a>
-          <div>
-            <h3>
-              Tem certeza que deseja assinar o pacote {dataPlan.name} ? (R${" "}
-              {dataPlan.perks !== undefined
-                ? dataPlan.price.replace(".", ",")
-                : ""}
-              )
-            </h3>
-            <p>
-              <button onClick={() => setAssiner(false)}>NÃO</button>
-              <button onClick={() => SendPlanAssinerToApi()}>SIM</button>
-            </p>
-          </div>
-        </AssinarDiv>
-      ) : (
-        ""
-      )}
-    </Container>
-  );
+  function GoTo() {
+    alert("Parabéns, pagamento feito com sucesso!");
+    navigate("/home");
+  };
+}
+return (
+  <Container>
+    <ContainerPlan>
+      <BackArrow onClick={() => navigate('/subscriptions')}>
+        <ArrowBackOutline color={'#ffffff'} height="40px" width="40px" />
+      </BackArrow>
+      <img src={dataPlan.image} alt="Logo do Plano selecionado" />
+      <h2>{dataPlan.name}</h2>
+      <Benefits>
+        <ClipboardOutline color={'#FF4791'} height="26px" width="22px" />
+        <h3>Benefícios:</h3>
+      </Benefits>
+      {dataPlan.perks !== undefined
+        ? dataPlan.perks.map((perks, index) => (
+          <h3 key={index}>
+            {index + 1}. {perks.title}{" "}
+          </h3>
+        ))
+        : ""}
+      <Cash>
+        <CashOutline color={'#FF4791'} height="26px" width="22px" />
+        <h3>Preço:</h3> <p></p>
+      </Cash>
+      <h3>
+        R${" "}
+        {dataPlan.perks !== undefined ? dataPlan.price.replace(".", ",") : ""}{" "}
+        cobrados mensalmente
+      </h3>
+      <InputsMaiores>
+        <input
+          onChange={(e) => setCardName(e.target.value)}
+          type="text"
+          placeholder="Nome impresso no cartão"
+        />
+        <input
+          onChange={(e) => setCardNumber(e.target.value)}
+          type="number"
+          placeholder="Digitos do cartão"
+        />
+      </InputsMaiores>
+      <InputsMenores>
+        <input
+          onChange={(e) => setSecurityNumber(e.target.value)}
+          type="number"
+          placeholder="CVV"
+        />
+        <input
+          onChange={(e) => setExpirationDate(e.target.value)}
+          type="date"
+          placeholder="Válidade"
+        />
+      </InputsMenores>
+      <button onClick={() => setAssiner(true)}>ASSINAR</button>
+    </ContainerPlan>
+    {assiner ? (
+      <AssinarDiv>
+        <a href="/#">
+          <CloseOutline onClick={() => setAssiner(false)}
+            right="10px" color={'#ffffff'} height="40px" width="40px" />
+        </a>
+        <div>
+          <h3>
+            Tem certeza que deseja assinar o pacote {dataPlan.name} ? (R${" "}
+            {dataPlan.perks !== undefined
+              ? dataPlan.price.replace(".", ",")
+              : ""}
+            )
+          </h3>
+          <p>
+            <button onClick={() => setAssiner(false)}>NÃO</button>
+            <button onClick={() => SendPlanAssinerToApi()}>SIM</button>
+          </p>
+        </div>
+      </AssinarDiv>
+    ) : (
+      ""
+    )}
+  </Container>
+);
 }
 
 
@@ -265,7 +262,7 @@ const ContainerPlan = styled.div`
   background: black;
   height: 100vh;
   max-width: 414px ;
-  padding: 3.5rem;
+  padding: 2.8rem;
   display: flex;
   flex-direction: column;
   justify-content: center;

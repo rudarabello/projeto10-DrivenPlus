@@ -3,10 +3,10 @@ import { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import styled from "styled-components";
-import LoginContext from "../contexts/LoginContext";
+import Context from "../contexts/Context";
 
 export default function Subscriptions() {
-    const { account } = useContext(LoginContext);
+    const { account } = useContext(Context);
     const [planos, setPlanos] = useState([{}]);
     const API = "https://mock-api.driven.com.br/api/v4/driven-plus/subscriptions/memberships";
     useEffect(() => {
@@ -26,12 +26,12 @@ export default function Subscriptions() {
     return (
         <StyledSubscriptions>
             <h1>Escolha o seu plano</h1>
-            {planos.map(data => (
-                <PlanList key={data.id}>
+            {planos.map((data,index) => (
+                <PlanList key={index}>
                     < Link to={`/plan/${data.id}`}>
                         <img src={data.image} alt="Logo do plano" />
                         <p>
-                            R$ {data.price !== undefined ? data.price.replace(".", ",") : ""}{" "}
+                            R$ {data.price !== undefined ? data.price.replace(".", ",") : ""} {" "}
                         </p>
                     </Link>
                 </PlanList>))}
@@ -53,9 +53,10 @@ const StyledSubscriptions = styled.div`
     height: 100vh;
     h1 {
         font-family: "Roboto";
-        font-size: 32px;
+        font-size: 30px;
         font-weight: 700;
         color: #FFFFFF;
+        max-width: 350px;
     }
     
 `
@@ -66,7 +67,8 @@ const PlanList = styled.div`
         justify-content: center;
         align-items: center;
         gap: 10px;
-	    width: 290px;
+	    width: 80%;
+        max-width: 350px;
         height: 180px;
         display: flex;
         justify-content: space-between;

@@ -2,7 +2,8 @@ import { useContext, useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import axios from "axios";
-import LoginContext from "../contexts/LoginContext";
+import Context from "../contexts/Context";
+import ContextPlan from "../contexts/ContextPlan";
 import logo from "../assets/Driven_white 1.png";
 
 
@@ -12,7 +13,8 @@ export default function Login() {
     const [password, setPassword] = useState("");
     const localUser = localStorage.getItem("user");
     const navigate = useNavigate()
-    const { setAccount } = useContext(LoginContext);
+    const { setAccount } = useContext(Context);
+    const { infoPlan, setInfoPlan } = useContext(ContextPlan);
     const URL = "https://mock-api.driven.com.br/api/v4/driven-plus/auth/login";
     const tempAxiosFunction = useRef();
     const axiosFunction = () => {
@@ -42,9 +44,14 @@ export default function Login() {
     }
 
     function GoTo(data) {
-        setAccount(data); const user = { email, password };
+        setAccount(data);
+        setInfoPlan(data.membership);
+        const user = { email, password };
         localStorage.removeItem("user");
         console.log(user);
+        console.log(data);
+        console.log(infoPlan);
+        
         const userStrigify = JSON.stringify(user);
         localStorage.setItem("user", userStrigify);
         if (data.membership === null) {

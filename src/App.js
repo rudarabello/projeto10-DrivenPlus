@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import LoginContext from "./contexts/LoginContext";
+import Context from "./contexts/Context";
+import ContextPlan from "./contexts/ContextPlan";
 import Login from "./components/Login"
 import SignUp from "./components/SignUp";
 import Subscriptions from "./components/Subscriptions";
@@ -9,9 +10,10 @@ import { useState } from "react";
 
 export default function App() {
     const [account, setAccount] = useState([{}]);
-    const [plan, setPlan] = useState([]);
+    const [infoPlan, setInfoPlan] = useState([{}]);
     return (
-        <LoginContext.Provider value={{account, setAccount, plan, setPlan}}>
+        <Context.Provider value={{ account, setAccount }}>
+            <ContextPlan.Provider value={{ infoPlan, setInfoPlan }}>
                 <BrowserRouter>
                     <Routes>
                         <Route path="/" element={<Login />} />
@@ -21,6 +23,7 @@ export default function App() {
                         <Route path="/home" element={<Home />} />
                     </Routes>
                 </BrowserRouter>
-        </LoginContext.Provider>
+            </ContextPlan.Provider>
+        </Context.Provider>
     )
 }

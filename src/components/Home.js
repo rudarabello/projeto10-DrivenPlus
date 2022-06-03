@@ -3,18 +3,19 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useContext } from 'react';
 import styled from "styled-components";
-import LoginContext from "../contexts/LoginContext";
+import Context from "../contexts/Context";
+import ContextPlan from "../contexts/ContextPlan";
 import Profile from "../assets/Profile.png";
 
 export default function Home() {
 
   const navigate = useNavigate();
-  const { account } = useContext(LoginContext);
-  const { plan } = useContext(LoginContext);
+  const { account } = useContext(Context);
+  const { infoPlan } = useContext(ContextPlan);
 
 
   console.log(account)
-  console.log(plan.membership)
+  console.log(infoPlan)
   console.log(account.token)
 
 
@@ -53,10 +54,11 @@ export default function Home() {
 
   return (
     <ContainerHome>
+      <Container>
       <Header>
-        <img src={account.membership.image} alt="Imagem do Perfil" />
+        <img src={infoPlan.image} alt="Imagem do Perfil" />
         <img
-          onClick={() => navigate(`/users/${account.id}`)}
+          onClick={() => navigate(`/users/${infoPlan.id}`)}
           src={Profile}
           alt="Imagem do Perfil"
           width="20px"
@@ -66,9 +68,9 @@ export default function Home() {
       <h1>Olá, {account.name}</h1>
 
       <ButtonsFromApi>
-        {account.membership.perks === undefined
+        {infoPlan.perks === undefined
           ? console.log("Eu sou o array undefined")
-          : account.membership.perks.map((perks, index) => (
+          : infoPlan.perks.map((perks, index) => (
             <a key={index} href={perks.link} target="_blank" rel="noreferrer">
               <button key={index}>{perks.title}</button>
             </a>
@@ -79,18 +81,46 @@ export default function Home() {
         <button onClick={() => navigate("/subscriptions")}>Mudar Plano</button>
         <button onClick={() => deletePlanDataFromApi()}>Cancelar Plano</button>
       </ButtonsHomeContainer>
+      </Container>
     </ContainerHome>
   );
 }
+
+const Container = styled.div`
+  max-width: 450px;  
+  height: 100vh;
+`;
+
+const ContainerHome = styled.div`
+  display: flex;
+  background: black;
+  align-items: center;
+  align-content: center;
+  height: 100%;  
+  flex-direction: column;
+  padding: 2.8rem;
+  h1 {
+    margin-top: 30px;
+    margin-left: 20%;
+    color: white;
+    font-family: "Roboto";
+    font-size: 28px;
+  }
+  @media(max-width: 450px) {
+    height: 100vh;
+  }
+
+`;
 const ButtonsFromApi = styled.div`
   width: 100%;
+  min-width: 260px;
   display: flex;
   flex-direction: column;
   align-items: center;
   margin-top: 5%;
   margin-bottom: 40%;
-  button {
-    width: 22rem;
+  button, a {
+    width: 100%;
     height: 50px;
     margin-bottom: 10px;
     border-radius: 5px;
@@ -108,6 +138,7 @@ const ButtonsFromApi = styled.div`
 `;
 const ButtonsHomeContainer = styled.div`
   display: flex;
+  width: 100%;
   flex-direction: column;
   align-items: center;
   justify-content: center;
@@ -115,7 +146,7 @@ const ButtonsHomeContainer = styled.div`
   align-content: center;
   position: relative;
     button {
-    width: 22rem;
+    width: 100%;
     height: 50px;
     margin-bottom: 10px;
     border-radius: 5px;
@@ -157,21 +188,3 @@ const Header = styled.div`
   }
 `;
 
-const ContainerHome = styled.div`
-  display: flex;
-  background: black;
-  height: 100%;
-  flex-direction: column;
-  padding: 3rem;
-  h1 {
-    margin-top: 30px;
-    margin-left: 20%;
-    color: white;
-    font-family: "Roboto";
-    font-size: 28px;
-  }
-  @media(max-width: 450px) {
-    height: 100vh;
-  }
-
-`;
