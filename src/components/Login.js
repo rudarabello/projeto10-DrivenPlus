@@ -5,10 +5,12 @@ import axios from "axios";
 import Context from "../contexts/Context";
 import ContextPlan from "../contexts/ContextPlan";
 import logo from "../assets/Driven_white 1.png";
+import Loading from "../components/Loading";
 
 
 export default function Login() {
-
+    
+    const [loading, setLoading] = useState(false);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const localUser = localStorage.getItem("user");
@@ -51,8 +53,10 @@ export default function Login() {
             navigate('/home')
         }
     };
+    setTimeout(()=> setLoading (true),3000);
     return (
         <StyledLogin>
+            {loading === true ?
             <Page>
                 <img src={logo} alt="Logo Driven+" />
                 <Form onSubmit={handleLogin}>
@@ -79,7 +83,8 @@ export default function Login() {
                     <FormButton type="submit">ENTRAR</FormButton>
                 </Form>
                 <Link to="/SignUp">Não tem uma conta? Cadastre-se!</Link>
-            </Page>
+            </Page>:
+            <Loading />}            
         </StyledLogin>
     )
 }

@@ -1,13 +1,15 @@
 
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import styled from "styled-components";
 import Context from "../contexts/Context";
 import ContextPlan from "../contexts/ContextPlan";
 import Profile from "../assets/Profile.png";
+import Loading from "../components/Loading";
 
 export default function Home() {
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { account } = useContext(Context);
   const { infoPlan } = useContext(ContextPlan);
@@ -39,8 +41,10 @@ export default function Home() {
       });
     }
   }
+  setTimeout(() => setLoading(true), 2000);
   return (
     <ContainerHome>
+      {loading === true ?
       <Container>
       <Header>
         <img src={infoPlan.image} alt="Imagem do Plano" />
@@ -66,6 +70,7 @@ export default function Home() {
         <button onClick={() => deletePlanDataFromApi()}>Cancelar Plano</button>
       </ButtonsHomeContainer>
       </Container>
+      :<Loading/>}
     </ContainerHome>
   );
 }

@@ -73,6 +73,7 @@ export default function UserUpdate() {
                     />
                     <input
                         type="number"
+                        disabled="false"
                         onChange={(e) => setCPF(e.target.value)}
                         placeholder={account.cpf}
                     />

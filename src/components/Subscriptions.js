@@ -4,8 +4,10 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import styled from "styled-components";
 import Context from "../contexts/Context";
+import Loading from "../components/Loading";
 
 export default function Subscriptions() {
+    const [loading, setLoading] = useState(false);
     const { account } = useContext(Context);
     const [planos, setPlanos] = useState([{}]);
     const API = "https://mock-api.driven.com.br/api/v4/driven-plus/subscriptions/memberships";
@@ -21,23 +23,30 @@ export default function Subscriptions() {
         }, [account.token]);
         promise.catch((error) => alert(error.response.data.message));
     }, [account.token]);
+    setTimeout(() => setLoading(true), 2000);
     return (
         <StyledSubscriptions>
-            <h1>Escolha o seu plano</h1>
-            {planos.map((data,index) => (
-                <PlanList key={index}>
-                    < Link to={`/plan/${data.id}`}>
-                        <img src={data.image} alt="Logo do plano" />
-                        <p>
-                            R$ {data.price !== undefined ? data.price.replace(".", ",") : ""} {" "}
-                        </p>
-                    </Link>
-                </PlanList>))}
+            {loading === true ?
+                <>
+                    <h1>Escolha o seu plano</h1>
+                    {planos.map((data, index) => (
+                        <PlanList key={index}>
+                            < Link to={`/plan/${data.id}`}>
+                                <img src={data.image} alt="Logo do plano" />
+                                <p>
+                                    R$ {data.price !== undefined ? data.price.replace(".", ",") : ""} {" "}
+                                </p>
+                            </Link>
+                        </PlanList>))}
+                </> :
+                <Loading />}
         </StyledSubscriptions >
     );
-
-
 }
+
+
+
+
 
 const StyledSubscriptions = styled.div`
     
