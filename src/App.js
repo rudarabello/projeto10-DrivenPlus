@@ -9,6 +9,10 @@ import Home from "./components/Home";
 import UserPage from "./components/UserPage";
 import UserUpdate from "./components/UserUpdate";
 import { useState } from "react";
+import Fav from "./components/Favicon";
+import Hel from "./components/Helmet";
+
+
 
 export default function App() {
     const [account, setAccount] = useState([{}]);
@@ -16,6 +20,8 @@ export default function App() {
     return (
         <Context.Provider value={{ account, setAccount }}>
             <ContextPlan.Provider value={{ infoPlan, setInfoPlan }}>
+                <Fav/>
+                <Hel/>
                 <BrowserRouter>
                     <Routes>
                         <Route path="/" element={<Login />} />
