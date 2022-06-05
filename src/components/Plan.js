@@ -92,7 +92,7 @@ return (
       <h2>{dataPlan.name}</h2>
       <Benefits>
         <ClipboardOutline color={'#FF4791'} height="26px" width="22px" />
-        <h3>Benefícios:</h3>
+      <h3>Benefícios:</h3>
       </Benefits>
       {dataPlan.perks !== undefined
         ? dataPlan.perks.map((perks, index) => (
@@ -103,7 +103,7 @@ return (
         : ""}
       <Cash>
         <CashOutline color={'#FF4791'} height="26px" width="22px" />
-        <h3>Preço:</h3> <p></p>
+      <h3>Preço:</h3>
       </Cash>
       <h3>
         R${" "}
@@ -186,7 +186,7 @@ const AssinarDiv = styled.div`
     max-width: 350px ;
     height: 200px;
     padding: 2rem;
-    border-radius: 5px;
+    border-radius: 8px;
     box-shadow: 0px 0px 10px rgba(999, 999, 999, 0.7);
     background-color: white;
     display: flex;
@@ -228,7 +228,7 @@ const Container = styled.div`
         height: 55px;
         background-color: #ff4791;
         border: thin solid #ff4791;
-        border-radius: 5px;
+        border-radius: 8px;
         color: #ffffff;
         font-family: "Roboto";
         font-weight: 500;
@@ -279,9 +279,17 @@ const ContainerPlan = styled.div`
 
 const Benefits = styled.div`
   margin-bottom: 15px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  
 `
 const Cash = styled.div`
+  margin-top: 15px;
   margin-bottom: 15px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
 `
 const InputsMenores = styled.div`
   display: flex;
@@ -292,6 +300,7 @@ const InputsMenores = styled.div`
     height: 52px;
     margin-top: 10px;
     margin-bottom: 10px;
+    border-radius: 8px;
     
   }
   
@@ -306,6 +315,7 @@ const InputsMaiores = styled.div`
   input{
     width: 99%;
     height: 52px;
+    border-radius: 8px;
   }
   
   
