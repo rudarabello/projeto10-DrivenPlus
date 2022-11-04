@@ -2,7 +2,7 @@
 
 ## Description
 
-    This is a exercise of front-end on react develop as 10º th project of Driven Bootcamp. Simulates a service to choice a plan of streaming
+This is a exercise of front-end on react develop as 10º th project of Driven Bootcamp. Simulates a service to choice a plan of streaming
 ## Main Screens  - on mobile
 
 Login    | Select plan  | Payment     | Home  
